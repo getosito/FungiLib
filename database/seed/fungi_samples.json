@@ -1,0 +1,422 @@
+[
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-001",
+      "primaryKey": "PY-FUN-001"
+    },
+    "taxonomy": {
+      "commonName": "Red bracket fungus",
+      "scientificName": "Pycnoporus sanguineus",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Polyporales",
+      "family": "Polyporaceae",
+      "genus": "Pycnoporus",
+      "species": "sanguineus"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0001.jpg,"
+      ],
+      "gps": {
+        "lat": -25.2822,
+        "lng": -57.6351
+      },
+      "ecoregion": "Upper Parana Atlantic Forest"
+    },
+    "collectionData": {
+      "date": "2024-08-12",
+      "collectedBy": "Nara",
+      "cultureCollectionNumber": "CC-PY-045",
+      "author": "(L.) Murrill"
+    },
+    "labInfo": {
+      "location": "Mycology Laboratory, Faculty of Sciences",
+      "herbariumEntryNumber": "HEP-2024-112",
+      "collector": "Jonathan",
+      "collectionNumber": "PY-FUN-001",
+      "physicalEvidence": "Dried and pressed basidiocarp",
+      "shelfNumber": "3",
+      "boxNumber": "12"
+    },
+    "labNotes": "Collected on dead hardwood substrate."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-002",
+      "primaryKey": "PY-FUN-002"
+    },
+    "taxonomy": {
+      "commonName": "Wood ear mushroom",
+      "scientificName": "Auricularia auricula-judae",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Auriculariales",
+      "family": "Auriculariaceae",
+      "genus": "Auricularia",
+      "species": "auricula-judae"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0002.jpg,"
+      ],
+      "gps": {
+        "lat": -24.9667,
+        "lng": -55.5000
+      },
+      "ecoregion": "Humid Chaco"
+    },
+    "collectionData": {
+      "date": "2024-09-03",
+      "collectedBy": "Juan Perez",
+      "cultureCollectionNumber": "CC-PY-046",
+      "author": "(Bull.) Qual."
+    },
+    "labInfo": {
+      "location": "Central Mycological Repository",
+      "herbariumEntryNumber": "HEP-2024-128",
+      "collector": "Juan Perez",
+      "collectionNumber": "PY-FUN-002",
+      "physicalEvidence": "Dehydrated specimen",
+      "shelfNumber": "5",
+      "boxNumber": "18"
+    },
+    "labNotes": "Collected on decaying wood."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-003",
+      "primaryKey": "PY-FUN-003"
+    },
+    "taxonomy": {
+      "commonName": "Turkey tail",
+      "scientificName": "Trametes versicolor",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Polyporales",
+      "family": "Polyporaceae",
+      "genus": "Trametes",
+      "species": "versicolor"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0003.jpg,"
+      ],
+      "gps": {
+        "lat": -25.5079,
+        "lng": -54.6119
+      },
+      "ecoregion": "Upper Parana Atlantic Forest"
+    },
+    "collectionData": {
+      "date": "2024-07-19",
+      "collectedBy": "Camila Benitez",
+      "cultureCollectionNumber": "CC-PY-047",
+      "author": "(L.) Lloyd"
+    },
+    "labInfo": {
+      "location": "Specimen Room and Herbarium Unit",
+      "herbariumEntryNumber": "HEP-2024-131",
+      "collector": "Camila Benitez",
+      "collectionNumber": "PY-FUN-003",
+      "physicalEvidence": "Dried basidiocarp fragment",
+      "shelfNumber": "2",
+      "boxNumber": "07"
+    },
+    "labNotes": "Collected from fallen log."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-004",
+      "primaryKey": "PY-FUN-004"
+    },
+    "taxonomy": {
+      "commonName": "Reishi (lingzhi)",
+      "scientificName": "Ganoderma lucidum",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Polyporales",
+      "family": "Ganodermataceae",
+      "genus": "Ganoderma",
+      "species": "lucidum"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0004.jpg,"
+      ],
+      "gps": {
+        "lat": -25.3008,
+        "lng": -57.5802
+      },
+      "ecoregion": "Humid Chaco"
+    },
+    "collectionData": {
+      "date": "2024-06-22",
+      "collectedBy": "Luis Rojas",
+      "cultureCollectionNumber": "CC-PY-048",
+      "author": "(Curtis) P. Karst."
+    },
+    "labInfo": {
+      "location": "Mycology Laboratory, Faculty of Sciences",
+      "herbariumEntryNumber": "HEP-2024-140",
+      "collector": "Luis Rojas",
+      "collectionNumber": "PY-FUN-004",
+      "physicalEvidence": "Dried basidiocarp with lacquered cap",
+      "shelfNumber": "4",
+      "boxNumber": "03"
+    },
+    "labNotes": "Specimen collected from wood and tree roots."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-005",
+      "primaryKey": "PY-FUN-005"
+    },
+    "taxonomy": {
+      "commonName": "Split gill",
+      "scientificName": "Schizophyllum commune",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Schizophyllaceae",
+      "genus": "Schizophyllum",
+      "species": "commune"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0005.jpg,"
+      ],
+      "gps": {
+        "lat": -25.3950,
+        "lng": -54.7400
+      },
+      "ecoregion": "Upper Parana Atlantic Forest"
+    },
+    "collectionData": {
+      "date": "2024-08-28",
+      "collectedBy": "Maria Duarte",
+      "cultureCollectionNumber": "CC-PY-049",
+      "author": "Fr."
+    },
+    "labInfo": {
+      "location": "Central Mycological Repository",
+      "herbariumEntryNumber": "HEP-2024-144",
+      "collector": "Maria Duarte",
+      "collectionNumber": "PY-FUN-005",
+      "physicalEvidence": "Dried cluster (paper packet)",
+      "shelfNumber": "6",
+      "boxNumber": "21"
+    },
+    "labNotes": "Collected from dead branches."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-006",
+      "primaryKey": "PY-FUN-006"
+    },
+    "taxonomy": {
+      "commonName": "Pink oyster mushroom",
+      "scientificName": "Pleurotus djamor",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Pleurotaceae",
+      "genus": "Pleurotus",
+      "species": "djamor"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0006.jpg,"
+      ],
+      "gps": {
+        "lat": -25.2630,
+        "lng": -57.5750
+      },
+      "ecoregion": "Humid Chaco"
+    },
+    "collectionData": {
+      "date": "2024-09-10",
+      "collectedBy": "Nara Molinas",
+      "cultureCollectionNumber": "CC-PY-050",
+      "author": "(Rumph. ex Fr.) Singer"
+    },
+    "labInfo": {
+      "location": "Culture & Isolation Lab",
+      "herbariumEntryNumber": "HEP-2024-151",
+      "collector": "Nara Molinas",
+      "collectionNumber": "PY-FUN-006",
+      "physicalEvidence": "Fresh tissue and dried voucher",
+      "shelfNumber": "1",
+      "boxNumber": "02"
+    },
+    "labNotes": "Collected from tropical hardwood substrate."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-007",
+      "primaryKey": "PY-FUN-007"
+    },
+    "taxonomy": {
+      "commonName": "Hairy lentinus",
+      "scientificName": "Lentinus crinitus",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Polyporales",
+      "family": "Polyporaceae",
+      "genus": "Lentinus",
+      "species": "crinitus"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0007.jpg,"
+      ],
+      "gps": {
+        "lat": -26.0160,
+        "lng": -54.5000
+      },
+      "ecoregion": "Upper Parana Atlantic Forest"
+    },
+    "collectionData": {
+      "date": "2024-05-14",
+      "collectedBy": "Juan Perez",
+      "cultureCollectionNumber": "CC-PY-051",
+      "author": "(L.) Fr."
+    },
+    "labInfo": {
+      "location": "Specimen Room, Herbarium Unit",
+      "herbariumEntryNumber": "HEP-2024-156",
+      "collector": "Juan Perez",
+      "collectionNumber": "PY-FUN-007",
+      "physicalEvidence": "Dried tough basidiocarp",
+      "shelfNumber": "7",
+      "boxNumber": "10"
+    },
+    "labNotes": "Collected from deadwood."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-008",
+      "primaryKey": "PY-FUN-008"
+    },
+    "taxonomy": {
+      "commonName": "Mica cap",
+      "scientificName": "Coprinellus micaceus",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Psathyrellaceae",
+      "genus": "Coprinellus",
+      "species": "micaceus"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0008.jpg,"
+      ],
+      "gps": {
+        "lat": -25.0000,
+        "lng": -56.4500
+      },
+      "ecoregion": "Humid Chaco"
+    },
+    "collectionData": {
+      "date": "2024-09-21",
+      "collectedBy": "Camila Benitez",
+      "cultureCollectionNumber": "CC-PY-052",
+      "author": "(Bull.) Vilgalys, Hopple & Jacq. Johnson"
+    },
+    "labInfo": {
+      "location": "Mycology Laboratory, Faculty of Sciences",
+      "herbariumEntryNumber": "HEP-2024-160",
+      "collector": "Camila Benitez",
+      "collectionNumber": "PY-FUN-008",
+      "physicalEvidence": "Dried inkcap remnants",
+      "shelfNumber": "2",
+      "boxNumber": "14"
+    },
+    "labNotes": "Collected from disturbed soil and wood debris."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-009",
+      "primaryKey": "PY-FUN-009"
+    },
+    "taxonomy": {
+      "commonName": "Bonnet mushroom",
+      "scientificName": "Mycena sp.",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Agaricales",
+      "family": "Mycenaceae",
+      "genus": "Mycena",
+      "species": "sp."
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0009.jpg,"
+      ],
+      "gps": {
+        "lat": -25.4300,
+        "lng": -54.6800
+      },
+      "ecoregion": "Upper Parana Atlantic Forest"
+    },
+    "collectionData": {
+      "date": "2024-08-02",
+      "collectedBy": "Luis Rojas",
+      "cultureCollectionNumber": "CC-PY-053",
+      "author": "Pers."
+    },
+    "labInfo": {
+      "location": "Central Mycological Repository",
+      "herbariumEntryNumber": "HEP-2024-164",
+      "collector": "Luis Rojas",
+      "collectionNumber": "PY-FUN-009",
+      "physicalEvidence": "Pooled dried specimens",
+      "shelfNumber": "8",
+      "boxNumber": "05"
+    },
+    "labNotes": "Collected from leaf litter."
+  },
+  {
+    "identification": {
+      "collectionNumber": "PY-FUN-010",
+      "primaryKey": "PY-FUN-010"
+    },
+    "taxonomy": {
+      "commonName": "Coral fungus",
+      "scientificName": "Ramaria formosa",
+      "division": "Basidiomycota",
+      "class": "Agaricomycetes",
+      "order": "Gomphales",
+      "family": "Gomphaceae",
+      "genus": "Ramaria",
+      "species": "formosa"
+    },
+    "ecology": {
+      "images": [
+        "https://raw.githubusercontent.com/ghost47x/FungiLib-Project/main/docs/images/py-0010.jpg,"
+      ],
+      "gps": {
+        "lat": -24.8500,
+        "lng": -55.2000
+      },
+      "ecoregion": "Humid Chaco"
+    },
+    "collectionData": {
+      "date": "2024-10-05",
+      "collectedBy": "Maria Duarte",
+      "cultureCollectionNumber": "CC-PY-054",
+      "author": "(Pers.) Qual."
+    },
+    "labInfo": {
+      "location": "Culture & Isolation Lab",
+      "herbariumEntryNumber": "HEP-2024-170",
+      "collector": "Maria Duarte",
+      "collectionNumber": "PY-FUN-010",
+      "physicalEvidence": "Dried coral fragments",
+      "shelfNumber": "3",
+      "boxNumber": "09"
+    },
+    "labNotes": "Collected from forest floor after rain."
+  }
+]

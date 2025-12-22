@@ -1,2 +1,1 @@
-# FungiLib
-Emergency Repository for our project
+# FungiLib-Project
