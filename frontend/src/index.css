@@ -89,4 +89,16 @@ body {
     background: #f3f000;
     color: #111;
 }
-/* estilo FACEN amarillo */
+
+/* === FIX PASSWORD GLYPHS === */
+input,
+textarea,
+select,
+button {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+input[type="password"] {
+    -webkit-text-security: disc;
+}
+
