@@ -1,20 +1,86 @@
-﻿export default function Navbar() {
+﻿import { useMemo, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
+const LANGS = ["en", "es"];
+
+export default function Navbar() {
+    const [lang, setLang] = useState("en");
+
+    useEffect(() => {
+        const saved = localStorage.getItem("lang");
+        if (saved && LANGS.includes(saved)) setLang(saved);
+    }, []);
+
+    const t = useMemo(() => {
+        const dict = {
+            en: {
+                definitions: "Definitions",
+                about: "About",
+                communities: "Communities",
+                forage: "Forage",
+                learn: "Learn",
+                login: "Login",
+                signup: "Sign up"
+            },
+            es: {
+                definitions: "Definiciones",
+                about: "Acerca de",
+                communities: "Comunidades",
+                forage: "Recoleccion",
+                learn: "Aprender",
+                login: "Ingresar",
+                signup: "Registrarse"
+            },
+        };
+        return dict[lang];
+    }, [lang]);
+
+    const toggleLang = () => {
+        const next = lang === "en" ? "es" : "en";
+        setLang(next);
+        localStorage.setItem("lang", next);
+    };
+
     return (
-        <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-black/10">
-            <nav className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <span className="text-xl">🍄</span>
-                    <span className="font-semibold tracking-wide text-zinc-900">FungiLib</span>
+        <header className="nav">
+            <div className="nav__left">
+                <div className="nav__brand">
+                    <img src="/logo.png" alt="FungiLib" className="nav__logo" />
+                    <span className="nav__title">FungiLib</span>
                 </div>
 
-                <div className="hidden md:flex items-center gap-6 text-xs uppercase tracking-[0.2em] text-zinc-600">
-                    <a className="hover:text-zinc-900" href="#definitions">Definitions</a>
-                    <a className="hover:text-zinc-900" href="#about">About</a>
-                    <a className="hover:text-zinc-900" href="#communities">Communities</a>
-                    <a className="hover:text-zinc-900" href="#forage">Forage</a>
-                    <a className="hover:text-zinc-900" href="#learn">Learn</a>
-                </div>
-            </nav>
+                <nav className="nav__links">
+                    <a href="#definitions">{t.definitions}</a>
+                    <a href="#about">{t.about}</a>
+                    <a href="#communities">{t.communities}</a>
+                    <a href="#forage">{t.forage}</a>
+                    <a href="#learn">{t.learn}</a>
+                </nav>
+            </div>
+
+            <div className="nav__right">
+                <button
+                    className="nav__iconBtn"
+                    onClick={toggleLang}
+                    title="Language"
+                >
+                    {lang.toUpperCase()}
+                </button>
+
+                <Link
+                    to="/login"
+                    className="nav__btn nav__btn--ghost"
+                >
+                    {t.login}
+                </Link>
+
+                <Link
+                    to="/signup"
+                    className="nav__btn nav__btn--solid"
+                >
+                    {t.signup}
+                </Link>
+            </div>
         </header>
     );
 }

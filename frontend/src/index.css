@@ -3,3 +3,90 @@
 body {
     margin: 0;
 }
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 22px;
+    background: #0f0f10;
+    color: #fff;
+}
+
+.nav__left {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav__logo {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+}
+
+.nav__title {
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+.nav__links {
+    display: flex;
+    gap: 18px;
+    opacity: .95;
+}
+
+    .nav__links a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+    }
+
+        .nav__links a:hover {
+            opacity: .8;
+        }
+
+.nav__right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav__iconBtn {
+    border: 1px solid rgba(255,255,255,.25);
+    background: transparent;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.nav__btn {
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 14px;
+}
+
+.nav__btn--ghost {
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff;
+}
+
+.nav__btn--solid {
+    background: #f3f000;
+    color: #111;
+}
+/* estilo FACEN amarillo */

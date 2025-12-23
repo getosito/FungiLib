@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
+import AdvancedSearchPanel from "../components/AdvancedSearchPanel";
 import SpecimenGrid from "../components/SpecimenGrid";
 
 export default function Home() {
@@ -8,6 +9,15 @@ export default function Home() {
     const [query, setQuery] = useState("");
     const [status, setStatus] = useState("loading");
     const [error, setError] = useState("");
+
+    // Advanced Search
+    const [advancedOpen, setAdvancedOpen] = useState(false);
+    const [filters, setFilters] = useState({
+        division: "",
+        family: "",
+        genus: "",
+        ecoregion: "",
+    });
 
     useEffect(() => {
         async function load() {
@@ -29,32 +39,100 @@ export default function Home() {
     }, []);
 
     const filtered = useMemo(() => {
+        // Search query
         const q = query.trim().toLowerCase();
-        if (!q) return items;
+
+        // Advanced filters
+        const fDivision = filters.division.trim().toLowerCase();
+        const fFamily = filters.family.trim().toLowerCase();
+        const fGenus = filters.genus.trim().toLowerCase();
+        const fEcoregion = filters.ecoregion.trim().toLowerCase();
+
         return items.filter((x) => {
             const common = (x?.taxonomy?.commonName ?? "").toLowerCase();
             const sci = (x?.taxonomy?.scientificName ?? "").toLowerCase();
-            return common.includes(q) || sci.includes(q);
+
+            // Normal search (query)
+            const matchesQuery = !q || common.includes(q) || sci.includes(q);
+
+            // Advanced filters
+            const division = (x?.taxonomy?.division ?? "").toLowerCase();
+            const family = (x?.taxonomy?.family ?? "").toLowerCase();
+            const genus = (x?.taxonomy?.genus ?? "").toLowerCase();
+            const ecoregion = (x?.ecology?.ecoregion ?? "").toLowerCase();
+
+            const matchesDivision = !fDivision || division.includes(fDivision);
+            const matchesFamily = !fFamily || family.includes(fFamily);
+            const matchesGenus = !fGenus || genus.includes(fGenus);
+            const matchesEcoregion = !fEcoregion || ecoregion.includes(fEcoregion);
+
+            return (
+                matchesQuery &&
+                matchesDivision &&
+                matchesFamily &&
+                matchesGenus &&
+                matchesEcoregion
+            );
         });
-    }, [items, query]);
+    }, [items, query, filters]);
+
+    const onAdvancedToggle = () => setAdvancedOpen((v) => !v);
+
+    const onApplyAdvanced = () => {
+       
+        setAdvancedOpen(false);
+    };
+
+    const onResetAdvanced = () => {
+        setFilters({ division: "", family: "", genus: "", ecoregion: "" });
+    };
 
     return (
         <div className="min-h-screen bg-white text-zinc-900">
             <Navbar />
-            <Hero query={query} setQuery={setQuery} />
+
+            <Hero
+                query={query}
+                setQuery={setQuery}
+                onAdvancedToggle={onAdvancedToggle}
+            />
+
+            <AdvancedSearchPanel
+                open={advancedOpen}
+                filters={filters}
+                setFilters={setFilters}
+                onApply={onApplyAdvanced}
+                onReset={onResetAdvanced}
+            />
 
             {status === "loading" && (
-                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">Loading...</div>
+                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">
+                    Loading...
+                </div>
             )}
 
             {status === "error" && (
                 <div className="mx-auto max-w-6xl px-4 py-10">
                     <div className="font-bold">Error loading fungi</div>
-                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">{error}</pre>
+                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">
+                        {error}
+                    </pre>
                 </div>
             )}
 
-            {status === "done" && <SpecimenGrid items={filtered.slice(0, 12)} />}
+            {status === "done" && (
+                <>
+                    {/* Mini resumen */}
+                    <div className="mx-auto max-w-6xl px-4 pt-6 text-sm text-zinc-600">
+                        Showing <b>{Math.min(filtered.length, 12)}</b> of{" "}
+                        <b>{filtered.length}</b> matches
+                    </div>
+
+                    <SpecimenGrid items={filtered.slice(0, 12)} />
+
+                    {/* For later pagination */}
+                </>
+            )}
         </div>
     );
 }

@@ -1,0 +1,62 @@
+.adv {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+    background: #fff;
+    border-top: 1px solid #eee;
+}
+
+.adv--open {
+    max-height: 320px;
+}
+
+.adv__inner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.adv__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 12px;
+}
+
+    .adv__grid label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+        color: #333;
+    }
+
+    .adv__grid input {
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+    }
+
+.adv__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.adv__btn {
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.adv__btn--ghost {
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.adv__btn--solid {
+    background: #111;
+    border: 1px solid #111;
+    color: #fff;
+}
