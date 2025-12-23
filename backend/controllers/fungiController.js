@@ -1,5 +1,5 @@
-const { db, bucket } = require('../config/firebaseAdmin');
-const { v4: uuidv4 } = require('uuid');
+const { db /*, bucket */ } = require('../config/firebaseAdmin');
+// const { v4: uuidv4 } = require('uuid');
 
 const fungiCollection = db.collection('fungi');
 
@@ -7,61 +7,37 @@ const fungiCollection = db.collection('fungi');
 async function createFungus(req, res) {
   try {
     const data = req.body;
-    const id = uuidv4();
-    let images = [];
 
-    // 1) Upload images to Firebase Storage (if any)
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const filename = `fungi/${id}/${Date.now()}_${file.originalname}`;
-        const fileRef = bucket.file(filename);
-
-        await fileRef.save(file.buffer, {
-          metadata: { contentType: file.mimetype }
-        });
-
-        const [url] = await fileRef.getSignedUrl({
-          action: 'read',
-          expires: Date.now() + 1000 * 60 * 60 * 24 * 365 // 1 year
-        });
-
-        images.push(url);
-      }
-    }
-
-    // 2) Destructure body into the groups from your project doc
     const {
-      identification = {},   // primaryKey, collectionNumber
-      taxonomy = {},         // commonName, scientificName, division, class, order, family, genus, species
-      ecology = {},          // gps, ecoregion
-      collectionData = {},   // coordinates, date, collectedBy, cultureCollectionNumber, author
-      labInfo = {},          // herbariumEntryNumber, shelfNumber, boxNumber, etc.
-      labNotes = ""          // free text
+      identification = {},
+      taxonomy = {},
+      ecology = {},
+      collectionData = {},
+      labInfo = {},
+      labNotes = ""
     } = data;
 
-    // 3) Basic validation (at least scientific name required)
+    const pk = (identification.primaryKey || "").trim();
+
+    if (!pk) {
+      return res.status(400).json({ error: "identification.primaryKey is required" });
+    }
     if (!taxonomy.scientificName) {
-      return res.status(400).json({
-        error: "taxonomy.scientificName is required"
-      });
+      return res.status(400).json({ error: "taxonomy.scientificName is required" });
     }
-
     if (!identification.collectionNumber) {
-      return res.status(400).json({
-        error: "identification.collectionNumber is required"
-      });
+      return res.status(400).json({ error: "identification.collectionNumber is required" });
     }
 
-    // 4) Build document exactly in the format you’ll describe in the report
     const now = new Date().toISOString();
 
     const doc = {
-      id,
+      id: pk,
       createdAt: now,
       updatedAt: now,
 
       identification: {
-        primaryKey: identification.primaryKey || "",
+        primaryKey: pk,
         collectionNumber: identification.collectionNumber || ""
       },
 
@@ -77,9 +53,8 @@ async function createFungus(req, res) {
       },
 
       ecology: {
-        // uploaded images take priority
-        images: images.length > 0 ? images : (ecology.images || []),
-        gps: ecology.gps || null,        // { lat, lng }
+        images: Array.isArray(ecology.images) ? ecology.images : [],
+        gps: ecology.gps || null,
         ecoregion: ecology.ecoregion || ""
       },
 
@@ -104,7 +79,8 @@ async function createFungus(req, res) {
       labNotes: labNotes || ""
     };
 
-    await fungiCollection.doc(id).set(doc);
+    await fungiCollection.doc(pk).set(doc);
+
     res.status(201).json(doc);
   } catch (err) {
     console.error("createFungus error:", err);
@@ -115,9 +91,35 @@ async function createFungus(req, res) {
 // LIST ────────────────────────────────────────────────────────────────
 async function listFungi(req, res) {
   try {
+
     const snapshot = await fungiCollection.get();
-    const results = [];
-    snapshot.forEach(doc => results.push(doc.data()));
+
+    const raw = [];
+    snapshot.forEach(doc => {
+      raw.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+
+    const byPk = new Map();
+    for (const item of raw) {
+      const pk = item?.identification?.primaryKey || item?.id;
+      if (!pk) continue;
+      byPk.set(pk, item);
+    }
+
+    const results = Array.from(byPk.values());
+
+    results.sort((a, b) => {
+      const pa = a?.identification?.primaryKey ?? "";
+      const pb = b?.identification?.primaryKey ?? "";
+      return pa.localeCompare(pb, undefined, {
+        numeric: true,
+        sensitivity: "base"
+      });
+    });
+
     res.json(results);
   } catch (err) {
     console.error("listFungi error:", err);
@@ -131,7 +133,9 @@ async function getFungus(req, res) {
     const id = req.params.id;
     const doc = await fungiCollection.doc(id).get();
 
-    if (!doc.exists) return res.status(404).json({ error: "Not found" });
+    if (!doc.exists) {
+      return res.status(404).json({ error: "Not found" });
+    }
 
     res.json(doc.data());
   } catch (err) {
@@ -140,101 +144,56 @@ async function getFungus(req, res) {
   }
 }
 
-// UPDATE (PATCH) ───────────────────────────────────────────────────────
+// UPDATE ───────────────────────────────────────────────────────────────
 async function updateFungus(req, res) {
   try {
     const id = req.params.id;
     const docRef = fungiCollection.doc(id);
 
-    // 1) Check if exists
-    const existingSnap = await docRef.get();
-    if (!existingSnap.exists) {
+    const snap = await docRef.get();
+    if (!snap.exists) {
       return res.status(404).json({ error: "Not found" });
     }
 
-    const existing = existingSnap.data() || {};
+    const existing = snap.data();
     const data = req.body || {};
-    let uploadedImages = [];
 
-    // 2) Upload new images if provided (optional)
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const filename = `fungi/${id}/${Date.now()}_${file.originalname}`;
-        const fileRef = bucket.file(filename);
-
-        await fileRef.save(file.buffer, {
-          metadata: { contentType: file.mimetype }
-        });
-
-        const [url] = await fileRef.getSignedUrl({
-          action: "read",
-          expires: Date.now() + 1000 * 60 * 60 * 24 * 365 // 1 year
-        });
-
-        uploadedImages.push(url);
-      }
-    }
-
-    // 3) Destructure like create
-    const {
-      identification = {},
-      taxonomy = {},
-      ecology = {},
-      collectionData = {},
-      labInfo = {},
-      labNotes
-    } = data;
-
-    // Helper: deep merge objects (keeps existing fields if not provided)
     const deepMerge = (base, incoming) => {
       if (!incoming || typeof incoming !== "object") return base;
       const out = { ...(base || {}) };
-      for (const key of Object.keys(incoming)) {
-        const v = incoming[key];
+      for (const k of Object.keys(incoming)) {
+        const v = incoming[k];
         if (v && typeof v === "object" && !Array.isArray(v)) {
-          out[key] = deepMerge(out[key], v);
+          out[k] = deepMerge(out[k], v);
         } else {
-          out[key] = v;
+          out[k] = v;
         }
       }
       return out;
     };
 
-    // 4) Build updated doc based on existing + incoming
     const now = new Date().toISOString();
-
-    // Keep current images unless:
-    // - uploadedImages exist (take priority)
-    // - or ecology.images provided (use them)
-    const existingImages = existing?.ecology?.images || [];
-    const mergedEcology = deepMerge(existing.ecology, ecology);
-
-    const finalImages =
-      uploadedImages.length > 0
-        ? uploadedImages
-        : (Array.isArray(mergedEcology.images) ? mergedEcology.images : existingImages);
 
     const updatedDoc = {
       ...existing,
-      id: existing.id || id,
       updatedAt: now,
 
-      identification: deepMerge(existing.identification, identification),
-      taxonomy: deepMerge(existing.taxonomy, taxonomy),
-      ecology: {
-        ...mergedEcology,
-        images: finalImages,
-        gps: mergedEcology.gps ?? existing?.ecology?.gps ?? null,
-        ecoregion: mergedEcology.ecoregion ?? existing?.ecology?.ecoregion ?? ""
+      identification: {
+        ...deepMerge(existing.identification, data.identification),
+        primaryKey: id
       },
-      collectionData: deepMerge(existing.collectionData, collectionData),
-      labInfo: deepMerge(existing.labInfo, labInfo),
 
-      // Only overwrite labNotes if the request sent it
-      labNotes: (labNotes !== undefined) ? labNotes : (existing.labNotes || "")
+      taxonomy: deepMerge(existing.taxonomy, data.taxonomy),
+      ecology: deepMerge(existing.ecology, data.ecology),
+      collectionData: deepMerge(existing.collectionData, data.collectionData),
+      labInfo: deepMerge(existing.labInfo, data.labInfo),
+
+      labNotes:
+        data.labNotes !== undefined
+          ? data.labNotes
+          : existing.labNotes
     };
 
-    // 5) Basic validation: make sure required fields still exist
     if (!updatedDoc?.taxonomy?.scientificName) {
       return res.status(400).json({ error: "taxonomy.scientificName is required" });
     }
@@ -242,7 +201,6 @@ async function updateFungus(req, res) {
       return res.status(400).json({ error: "identification.collectionNumber is required" });
     }
 
-    // 6) Save (overwrite document with merged object)
     await docRef.set(updatedDoc);
 
     res.json(updatedDoc);
@@ -271,4 +229,3 @@ module.exports = {
   updateFungus,
   deleteFungus
 };
-
