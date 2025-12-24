@@ -1,17 +1,66 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
 import { useI18n } from "../i18n/I18nProvider.jsx";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
+
 export default function Login() {
     const { lang, toggleLang, t } = useI18n();
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
     const [showPw, setShowPw] = useState(false);
+    const [error, setError] = useState("");
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault();
+        setError("");
+
+        try {
+            
+            const cred = await signInWithEmailAndPassword(auth, email, pw);
+
+           
+            const token = await cred.user.getIdToken(true);
+
+            
+            const res = await fetch(
+                `${import.meta.env.VITE_API_URL}/api/auth/me`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (!res.ok) throw new Error("Failed to fetch user role");
+
+            const me = await res.json();
+            console.log("Logged in as:", me.role);
+
+           
+            if (me.role === "admin") {
+                navigate("/admin");
+            } else {
+                navigate("/dashboard");
+            }
+
+        } catch (err) {
+            console.error("Firebase login error:", err?.code, err?.message, err);
+
+        
+            const code = err?.code || "";
+            if (code === "auth/user-not-found") setError("User not found");
+            else if (code === "auth/wrong-password") setError("Wrong password");
+            else if (code === "auth/invalid-credential") setError("Invalid credentials");
+            else if (code === "auth/too-many-requests") setError("Too many attempts. Try later.");
+            else if (code === "auth/invalid-email") setError("Invalid email format");
+            else setError(code || "Login failed");
+        }
+
     };
 
     return (
@@ -65,13 +114,23 @@ export default function Login() {
                             </button>
                         </div>
 
+                        {error && (
+                            <div style={{ color: "#ffb4b4", marginBottom: 10 }}>
+                                {error}
+                            </div>
+                        )}
+
                         <button className="authBtn authBtnPrimary" type="submit">
                             {t.login.loginBtn}
                         </button>
 
                         <div className="authDivider">{t.login.or}</div>
 
-                        <button className="authBtn authBtnGhost" type="button">
+                        <button
+                            className="authBtn authBtnGhost"
+                            type="button"
+                            disabled
+                        >
                             {t.login.googleBtn}
                         </button>
 
