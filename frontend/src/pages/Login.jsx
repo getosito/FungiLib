@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
+import { Link, useNavigate } from "react-router-dom"; 
 import "./auth.css";
 import { useI18n } from "../i18n/I18nProvider.jsx";
 
 export default function Login() {
     const { lang, toggleLang, t } = useI18n();
-    const navigate = useNavigate(); // Hook to change pages
+    const navigate = useNavigate(); 
 
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
     const [showPw, setShowPw] = useState(false);
+    const [error, setError] = useState("");
 
     const onSubmit = (e) => {
         e.preventDefault();
         
-        // --- EMERGENCY LOGIN LOGIC ---
+        // --- EMERGENCY LOGIN LOGIC (SIMULATION) ---
         console.log("Simulating Login...");
         
         // 1. Create a fake "Logged In" user
@@ -37,7 +38,6 @@ export default function Login() {
     return (
         <main className="authPage">
             <div className="authWrap">
-
                 {/* ENG/ES toggle */}
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 10 }}>
                     <button
@@ -84,6 +84,12 @@ export default function Login() {
                                 {showPw ? t.login.hide : t.login.show}
                             </button>
                         </div>
+
+                        {error && (
+                            <div style={{ color: "#ffb4b4", marginBottom: 10 }}>
+                                {error}
+                            </div>
+                        )}
 
                         <button className="authBtn authBtnPrimary" type="submit">
                             {t.login.loginBtn}

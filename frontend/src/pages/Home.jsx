@@ -93,14 +93,41 @@ export default function Home() {
             {/* --- ADMIN ONLY: ADD BUTTON --- */}
            {/* --- ADMIN ONLY: ADD BUTTON --- */}
 {/* --- ADMIN ONLY: ADD BUTTON --- */}
+{/* --- ADMIN DASHBOARD TOOLBAR --- */}
 {isAdmin && (
-    <div className="mx-auto max-w-6xl px-4 mt-6">
-        <button 
-            onClick={() => window.location.href = "/add-specimen"} 
-            className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg"
-        >
-            <span>+</span> Add New Specimen
-        </button>
+    <div className="mx-auto max-w-6xl px-4 mt-6 mb-8">
+        <div className="bg-zinc-50 border border-zinc-200 p-4 rounded-2xl flex flex-wrap justify-between items-center shadow-sm">
+            
+            {/* LEFT SIDE: Add Button */}
+            <button 
+                onClick={() => window.location.href = "/add-specimen"} 
+                className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-md active:scale-95"
+            >
+                <span className="text-xl leading-none">+</span> Add New Specimen
+            </button>
+
+            {/* RIGHT SIDE: Profile & Logout */}
+            <div className="flex items-center gap-4">
+                <span className="text-sm text-zinc-500 hidden sm:inline-block">
+                    Logged in as <b>Admin</b>
+                </span>
+                
+                <div className="h-8 w-px bg-zinc-300 hidden sm:block"></div> {/* Divider Line */}
+
+                <button 
+                    onClick={() => {
+                        if(window.confirm("Are you sure you want to sign out?")) {
+                            localStorage.removeItem("user");
+                            localStorage.removeItem("token");
+                            window.location.reload();
+                        }
+                    }}
+                    className="flex items-center gap-2 bg-white text-zinc-700 px-4 py-2 rounded-lg font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition border border-zinc-300 text-sm shadow-sm"
+                >
+                    🚪 Sign Out
+                </button>
+            </div>
+        </div>
     </div>
 )}
 

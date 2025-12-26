@@ -1,43 +1,37 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useI18n } from "../i18n/I18nProvider.jsx";
 
 export default function Signup() {
     const { lang, toggleLang, t } = useI18n();
+    const navigate = useNavigate();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
     const [pw2, setPw2] = useState("");
     const [showPw, setShowPw] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
-    async function onSubmit(e) {
+    const onSubmit = (e) => {
         e.preventDefault();
-        setError("");
-
+        
+        // --- SIMULATION SIGNUP ---
+        // 1. Pretend to check passwords
         if (pw !== pw2) {
-            setError(t.signup.errMismatch);
-            return;
-        }
-        if (pw.length < 6) {
-            setError(t.signup.errShort);
+            alert("Passwords do not match!");
             return;
         }
 
-        setLoading(true);
-        try {
-            await new Promise(r => setTimeout(r, 600));
-        } catch (err) {
-            setError("Could not create account.");
-        } finally {
-            setLoading(false);
-        }
-    }
+        // 2. Pretend to create account
+        console.log("Creating simulation account for:", email);
+        alert("✅ Account created successfully! (Simulation)\nPlease log in with your new account.");
+        
+        // 3. Send to Login Page
+        navigate("/login");
+    };
 
     return (
-        <main className="min-h-[calc(100vh-56px)] bg-[#0b0b0b] text-white flex items-center justify-center px-4 py-10">
+        <main className="min-h-screen bg-[#0b0b0b] text-white flex items-center justify-center px-4 py-10">
             <div className="w-full max-w-[460px]">
 
                 {/* ENG / ES toggle */}
@@ -45,58 +39,44 @@ export default function Signup() {
                     <button
                         type="button"
                         onClick={toggleLang}
-                        className="nav__iconBtn"
+                        className="px-3 py-1 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm font-bold"
                     >
                         {lang === "en" ? "ES" : "EN"}
                     </button>
                 </div>
 
                 <div className="mb-6">
-                    <h1 className="text-2xl font-semibold">{t.signup.title}</h1>
-                    <p className="text-white/70 mt-1">
-                        {t.signup.subtitle}
-                    </p>
+                    <h1 className="text-2xl font-semibold">{t.signup?.title || "Create Account"}</h1>
+                    <p className="text-white/70 mt-1">{t.signup?.subtitle || "Join the community"}</p>
                 </div>
 
-                <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
-                    {error && (
-                        <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-200">
-                            {error}
-                        </div>
-                    )}
-
+                <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 shadow-2xl">
                     <form onSubmit={onSubmit} className="space-y-4">
                         <div>
-                            <label className="text-xs tracking-widest text-white/70">
-                                {t.signup.nameLabel}
-                            </label>
+                            <label className="text-xs tracking-widest text-white/70 uppercase font-bold">Name</label>
                             <input
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-white/25"
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-emerald-500/50 focus:bg-black/60 transition"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                placeholder={t.signup.namePlaceholder}
+                                placeholder="Your Name"
                             />
                         </div>
 
                         <div>
-                            <label className="text-xs tracking-widest text-white/70">
-                                {t.signup.emailLabel}
-                            </label>
+                            <label className="text-xs tracking-widest text-white/70 uppercase font-bold">Email</label>
                             <input
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-white/25"
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-emerald-500/50 focus:bg-black/60 transition"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder={t.signup.emailPlaceholder}
+                                placeholder="name@example.com"
                                 required
                             />
                         </div>
 
                         <div>
-                            <label className="text-xs tracking-widest text-white/70">
-                                {t.signup.passwordLabel}
-                            </label>
-                            <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-white/25">
+                            <label className="text-xs tracking-widest text-white/70 uppercase font-bold">Password</label>
+                            <div className="mt-2 flex items-center gap-2 rounded-xl border border-white/10 bg-black/40 px-4 py-3 focus-within:border-emerald-500/50 focus-within:bg-black/60 transition">
                                 <input
                                     className="w-full bg-transparent outline-none"
                                     type={showPw ? "text" : "password"}
@@ -107,23 +87,18 @@ export default function Signup() {
                                 />
                                 <button
                                     type="button"
-                                    className="text-xs tracking-widest text-white/60 hover:text-white"
+                                    className="text-xs tracking-widest text-white/60 hover:text-white uppercase font-bold"
                                     onClick={() => setShowPw((v) => !v)}
                                 >
-                                    {showPw ? t.signup.hide : t.signup.show}
+                                    {showPw ? "HIDE" : "SHOW"}
                                 </button>
                             </div>
-                            <p className="mt-2 text-xs text-white/45">
-                                {t.signup.pwHint}
-                            </p>
                         </div>
 
                         <div>
-                            <label className="text-xs tracking-widest text-white/70">
-                                {t.signup.confirmLabel}
-                            </label>
+                            <label className="text-xs tracking-widest text-white/70 uppercase font-bold">Confirm Password</label>
                             <input
-                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-white/25"
+                                className="mt-2 w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 outline-none focus:border-emerald-500/50 focus:bg-black/60 transition"
                                 type={showPw ? "text" : "password"}
                                 value={pw2}
                                 onChange={(e) => setPw2(e.target.value)}
@@ -133,25 +108,17 @@ export default function Signup() {
                         </div>
 
                         <button
-                            disabled={loading}
-                            className="w-full rounded-xl bg-white text-black py-3 font-medium hover:bg-white/90 disabled:opacity-60 disabled:cursor-not-allowed"
+                            className="w-full rounded-xl bg-white text-black py-3 font-bold hover:bg-gray-200 transition transform active:scale-[0.98]"
                             type="submit"
                         >
-                            {loading ? "Creating account..." : t.signup.signupBtn}
+                            {t.signup?.signupBtn || "Sign Up"}
                         </button>
 
-                        <div className="pt-2 text-sm text-white/70">
-                            {t.signup.haveAccount}{" "}
-                            <Link to="/login" className="text-white hover:underline">
-                                {t.signup.loginLink}
-                            </Link>
+                        <div className="pt-2 text-sm text-white/70 text-center">
+                            Already have an account? <Link to="/login" className="text-emerald-400 hover:text-emerald-300 hover:underline font-bold ml-1">Log in</Link>
                         </div>
                     </form>
                 </section>
-
-                <p className="mt-4 text-xs text-white/45">
-                    {t.signup.fine}
-                </p>
             </div>
         </main>
     );

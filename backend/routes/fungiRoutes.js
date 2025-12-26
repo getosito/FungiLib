@@ -4,10 +4,25 @@ const router = express.Router();
 const { upload } = require("../utils/upload");
 const controller = require("../controllers/fungiController");
 
+const { requireAuth, authorizeRoles } = require("../middleware/auth");
+
 router.get("/", controller.listFungi);
 router.get("/:id", controller.getFungus);
-router.post("/", upload.array("images", 5), controller.createFungus);
-router.patch("/:id", upload.array("images", 5), controller.updateFungus);
-router.delete("/:id", controller.deleteFungus);
+
+
+router.post(
+  "/",
+  requireAuth,
+  authorizeRoles("admin", "researcher"),
+  upload.array("images", 5),
+  controller.createFungus
+);
+
+router.delete(
+  "/:id",
+  requireAuth,
+  authorizeRoles("admin"),
+  controller.deleteFungus
+);
 
 module.exports = router;
