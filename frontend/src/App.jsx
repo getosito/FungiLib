@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import FungiDetail from "./pages/FungiDetail";
+import AddSpecimen from "./pages/AddSpecimen";
 
 export default function App() {
     return (
@@ -12,6 +13,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/fungi/:id" element={<FungiDetail />} />
+                <Route path="/add-specimen" element={<AddSpecimen />} />
             </Routes>
         </BrowserRouter>
     );

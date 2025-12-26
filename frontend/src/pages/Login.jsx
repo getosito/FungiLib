@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Added useNavigate
 import "./auth.css";
 import { useI18n } from "../i18n/I18nProvider.jsx";
 
 export default function Login() {
     const { lang, toggleLang, t } = useI18n();
+    const navigate = useNavigate(); // Hook to change pages
 
     const [email, setEmail] = useState("");
     const [pw, setPw] = useState("");
@@ -12,6 +13,25 @@ export default function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        
+        // --- EMERGENCY LOGIN LOGIC ---
+        console.log("Simulating Login...");
+        
+        // 1. Create a fake "Logged In" user
+        const fakeUser = {
+            email: email,
+            role: "admin", // Forces you to be an Admin
+            uid: "manual-login-override",
+            displayName: "Jonathan"
+        };
+
+        // 2. Save it to Local Storage (so the website remembers you)
+        localStorage.setItem("user", JSON.stringify(fakeUser));
+        localStorage.setItem("token", "fake-session-token-123"); 
+
+        // 3. Redirect to the Home Page
+        alert("Login Successful (Simulation)");
+        window.location.href = "/"; // Force reload to apply changes
     };
 
     return (

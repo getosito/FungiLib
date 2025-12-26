@@ -19,6 +19,10 @@ export default function Home() {
         ecoregion: "",
     });
 
+    // --- CHECK IF USER IS ADMIN ---
+    const user = JSON.parse(localStorage.getItem("user"));
+    const isAdmin = user?.role === "admin";
+
     useEffect(() => {
         async function load() {
             try {
@@ -39,10 +43,7 @@ export default function Home() {
     }, []);
 
     const filtered = useMemo(() => {
-        // Search query
         const q = query.trim().toLowerCase();
-
-        // Advanced filters
         const fDivision = filters.division.trim().toLowerCase();
         const fFamily = filters.family.trim().toLowerCase();
         const fGenus = filters.genus.trim().toLowerCase();
@@ -51,11 +52,8 @@ export default function Home() {
         return items.filter((x) => {
             const common = (x?.taxonomy?.commonName ?? "").toLowerCase();
             const sci = (x?.taxonomy?.scientificName ?? "").toLowerCase();
-
-            // Normal search (query)
             const matchesQuery = !q || common.includes(q) || sci.includes(q);
 
-            // Advanced filters
             const division = (x?.taxonomy?.division ?? "").toLowerCase();
             const family = (x?.taxonomy?.family ?? "").toLowerCase();
             const genus = (x?.taxonomy?.genus ?? "").toLowerCase();
@@ -66,26 +64,13 @@ export default function Home() {
             const matchesGenus = !fGenus || genus.includes(fGenus);
             const matchesEcoregion = !fEcoregion || ecoregion.includes(fEcoregion);
 
-            return (
-                matchesQuery &&
-                matchesDivision &&
-                matchesFamily &&
-                matchesGenus &&
-                matchesEcoregion
-            );
+            return matchesQuery && matchesDivision && matchesFamily && matchesGenus && matchesEcoregion;
         });
     }, [items, query, filters]);
 
     const onAdvancedToggle = () => setAdvancedOpen((v) => !v);
-
-    const onApplyAdvanced = () => {
-       
-        setAdvancedOpen(false);
-    };
-
-    const onResetAdvanced = () => {
-        setFilters({ division: "", family: "", genus: "", ecoregion: "" });
-    };
+    const onApplyAdvanced = () => setAdvancedOpen(false);
+    const onResetAdvanced = () => setFilters({ division: "", family: "", genus: "", ecoregion: "" });
 
     return (
         <div className="min-h-screen bg-white text-zinc-900">
@@ -105,34 +90,42 @@ export default function Home() {
                 onReset={onResetAdvanced}
             />
 
+            {/* --- ADMIN ONLY: ADD BUTTON --- */}
+           {/* --- ADMIN ONLY: ADD BUTTON --- */}
+{/* --- ADMIN ONLY: ADD BUTTON --- */}
+{isAdmin && (
+    <div className="mx-auto max-w-6xl px-4 mt-6">
+        <button 
+            onClick={() => window.location.href = "/add-specimen"} 
+            className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-emerald-700 transition flex items-center gap-2 shadow-lg"
+        >
+            <span>+</span> Add New Specimen
+        </button>
+    </div>
+)}
+
             {status === "loading" && (
-                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">
-                    Loading...
-                </div>
+                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">Loading...</div>
             )}
 
             {status === "error" && (
                 <div className="mx-auto max-w-6xl px-4 py-10">
                     <div className="font-bold">Error loading fungi</div>
-                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">
-                        {error}
-                    </pre>
+                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">{error}</pre>
                 </div>
             )}
 
             {status === "done" && (
                 <>
-                    {/* Mini resumen */}
                     <div className="mx-auto max-w-6xl px-4 pt-6 text-sm text-zinc-600">
-                        Showing <b>{Math.min(filtered.length, 12)}</b> of{" "}
-                        <b>{filtered.length}</b> matches
+                        Showing <b>{Math.min(filtered.length, 12)}</b> of <b>{filtered.length}</b> matches
                     </div>
 
                     <SpecimenGrid items={filtered.slice(0, 12)} />
-
-                    {/* For later pagination */}
                 </>
             )}
+           {/* ADMIN ACTIONS */}
+
         </div>
     );
 }

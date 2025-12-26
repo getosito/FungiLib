@@ -7,7 +7,7 @@ const serviceAccount = require(path.resolve(serviceAccountPath));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+  storageBucket: "fungilib-project.firebasestorage.app" // <--- ADD THIS LINE
 });
 
 const db = admin.firestore();
