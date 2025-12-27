@@ -5,6 +5,12 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import FungiDetail from "./pages/FungiDetail";
 
+import Definitions from "./pages/Definitions";
+import About from "./pages/About";
+import Communities from "./pages/Communities";
+import Forage from "./pages/Forage";
+import Learn from "./pages/Learn";
+
 import LabLayout from "./layouts/LabLayout";
 import LabDashboard from "./pages/LabDashboard";
 import LabCatalog from "./pages/LabCatalog";
@@ -19,6 +25,12 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/fungi/:id" element={<FungiDetail />} />
+
+                <Route path="/definitions" element={<Definitions />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/communities" element={<Communities />} />
+                <Route path="/forage" element={<Forage />} />
+                <Route path="/learn" element={<Learn />} />
 
                 <Route path="/lab" element={<LabLayout />}>
                     <Route index element={<LabDashboard />} />

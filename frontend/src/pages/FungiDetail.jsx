@@ -33,6 +33,11 @@ export default function FungiDetail() {
     const [error, setError] = useState("");
     const [item, setItem] = useState(null);
 
+    // role read directly (always up-to-date as long as logout removes it)
+    const role = localStorage.getItem("userRole") || "";
+    const isAdmin = role === "admin";
+    const isMemberOrAdmin = role === "member" || role === "admin";
+
     useEffect(() => {
         let alive = true;
 
@@ -42,11 +47,11 @@ export default function FungiDetail() {
                 setError("");
                 setItem(null);
 
-                // 1) Intento: endpoint directo /api/fungi/:id
+                // 1)
                 const res1 = await fetch(`/api/fungi/${encodeURIComponent(decodedId)}`);
                 if (res1.ok) {
                     const data1 = await res1.json();
-                    const found1 = data1?.fungus ?? data1?.data ?? data1; // tolerante a formatos
+                    const found1 = data1?.fungus ?? data1?.data ?? data1;
                     if (alive) {
                         setItem(found1);
                         setStatus("done");
@@ -54,7 +59,7 @@ export default function FungiDetail() {
                     return;
                 }
 
-                // 2) Fallback: traer lista y buscar por primaryKey/id/collectionNumber
+                // 2) Fallback
                 const res2 = await fetch("/api/fungi");
                 if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
                 const data2 = await res2.json();
@@ -141,12 +146,31 @@ export default function FungiDetail() {
                         <Row label="GPS (lng)" value={String(safe(item, "ecology.gps.lng", "-"))} />
                     </Section>
 
-                    <Section title="Collection">
-                        <Row label="Collection Number" value={safe(item, "identification.collectionNumber", "-")} />
-                        <Row label="Collected By" value={safe(item, "collection.collectedBy", "-")} />
-                        <Row label="Collection Date" value={safe(item, "collection.collectionDate", "-")} />
-                        <Row label="Author" value={safe(item, "collection.author", "-")} />
-                    </Section>
+                    {/* Collection only for member/admin */}
+                    {isMemberOrAdmin && (
+                        <Section title="Collection">
+                            <Row label="Collection Number" value={safe(item, "identification.collectionNumber", "-")} />
+                            <Row label="Collected By" value={safe(item, "collectionData.collectedBy", "-")} />
+                            <Row label="Collection Date" value={safe(item, "collectionData.date", "-")} />
+                            <Row label="Author" value={safe(item, "collectionData.author", "-")} />
+                            <Row label="Culture collection #" value={safe(item, "collectionData.cultureCollectionNumber", "-")} />
+                            <Row label="Coordinates" value={safe(item, "collectionData.coordinates", "-")} />
+                        </Section>
+                    )}
+
+                    {/* Lab-only for admin */}
+                    {isAdmin && (
+                        <Section title="Lab Observations (Admin)">
+                            <Row label="Location" value={safe(item, "labInfo.location", "-")} />
+                            <Row label="Entry number" value={safe(item, "labInfo.herbariumEntryNumber", "-")} />
+                            <Row label="Collector" value={safe(item, "labInfo.collector", "-")} />
+                            <Row label="Collection number (lab)" value={safe(item, "labInfo.collectionNumber", "-")} />
+                            <Row label="Physical evidence" value={safe(item, "labInfo.physicalEvidence", "-")} />
+                            <Row label="Shelf number" value={safe(item, "labInfo.shelfNumber", "-")} />
+                            <Row label="Box number" value={safe(item, "labInfo.boxNumber", "-")} />
+                            <Row label="Lab notes" value={safe(item, "labNotes", "-")} />
+                        </Section>
+                    )}
                 </div>
             )}
         </Layout>

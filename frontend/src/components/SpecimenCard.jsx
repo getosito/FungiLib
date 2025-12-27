@@ -30,6 +30,11 @@ function getSpecimenId(item) {
     );
 }
 
+function dash(v) {
+    const s = v === null || v === undefined ? "" : String(v).trim();
+    return s.length ? s : "-";
+}
+
 export default function SpecimenCard({ item, canManage = false, onDeleted }) {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -42,6 +47,8 @@ export default function SpecimenCard({ item, canManage = false, onDeleted }) {
     const sci = item?.taxonomy?.scientificName ?? "";
     const raw = item?.ecology?.images?.[0] ?? "";
     const img = toImg(raw);
+
+    const lab = item?.labInfo;
 
     useEffect(() => {
         function onDocClick(e) {
@@ -158,6 +165,36 @@ export default function SpecimenCard({ item, canManage = false, onDeleted }) {
                     <div className="p-4">
                         <div className="font-semibold text-zinc-900">{common}</div>
                         {sci && <div className="italic text-sm text-zinc-600">{sci}</div>}
+
+                        {/* Compact admin summary (clean) */}
+                        {canManage && lab && (
+                            <div className="mt-3 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2">
+                                <div className="flex items-center justify-between gap-2">
+                                    <div className="text-xs font-semibold text-zinc-900">
+                                        Lab (admin)
+                                    </div>
+                                    <span className="text-[11px] text-zinc-500">
+                                        Entry: {dash(lab.herbariumEntryNumber)}
+                                    </span>
+                                </div>
+
+                                <div className="mt-1 text-xs text-zinc-700">
+                                    <span className="font-semibold text-zinc-800">Collector:</span>{" "}
+                                    {dash(lab.collector)}
+                                </div>
+
+                                <div className="mt-0.5 text-xs text-zinc-700">
+                                    <span className="font-semibold text-zinc-800">Shelf/Box:</span>{" "}
+                                    {dash(lab.shelfNumber)} / {dash(lab.boxNumber)}
+                                </div>
+
+                                <div className="mt-1">
+                                    <span className="inline-flex items-center rounded-lg border border-zinc-200 bg-white px-2 py-0.5 text-[11px] text-zinc-700">
+                                        View details in Edit
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </article>
             </Link>

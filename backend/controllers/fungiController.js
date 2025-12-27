@@ -66,9 +66,13 @@ async function createFungus(req, res) {
         author: collectionData.author || ""
       },
 
+      // ✅ ADMIN / LAB DATA (COMPLETO)
       labInfo: {
         location: labInfo.location || "",
+        primaryKeyId: labInfo.primaryKeyId || "",
         herbariumEntryNumber: labInfo.herbariumEntryNumber || "",
+        species: labInfo.species || "",
+        family: labInfo.family || "",
         collector: labInfo.collector || "",
         collectionNumber: labInfo.collectionNumber || "",
         physicalEvidence: labInfo.physicalEvidence || "",
@@ -91,7 +95,6 @@ async function createFungus(req, res) {
 // LIST ────────────────────────────────────────────────────────────────
 async function listFungi(req, res) {
   try {
-
     const snapshot = await fungiCollection.get();
 
     const raw = [];
@@ -186,6 +189,8 @@ async function updateFungus(req, res) {
       taxonomy: deepMerge(existing.taxonomy, data.taxonomy),
       ecology: deepMerge(existing.ecology, data.ecology),
       collectionData: deepMerge(existing.collectionData, data.collectionData),
+
+      // ✅ LAB INFO MERGE (YA ACEPTA LOS NUEVOS CAMPOS)
       labInfo: deepMerge(existing.labInfo, data.labInfo),
 
       labNotes:

@@ -12,7 +12,6 @@ dist
 dist-ssr
 *.local
 
-frontend/.env
 
 # Editor directories and files
 .vscode/*
@@ -24,3 +23,8 @@ frontend/.env
 *.njsproj
 *.sln
 *.sw?
+
+.env
+**/.env
+firebase-service-account.json
+**/firebase-service-account.json

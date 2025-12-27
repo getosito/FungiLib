@@ -39,9 +39,12 @@ export default function Navbar() {
     }, []);
 
     const onSignOut = async () => {
+        localStorage.removeItem("userRole");
+
         await signOut(auth);
         navigate("/");
     };
+
 
     const nav = t?.nav || {};
     const labels = {

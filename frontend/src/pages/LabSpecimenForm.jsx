@@ -23,6 +23,18 @@ function emptyForm() {
             ecoregion: "",
             images: [""],
         },
+
+        // matches backend + Firestore fields
+        labInfo: {
+            location: "",
+            herbariumEntryNumber: "",
+            collector: "",
+            collectionNumber: "",
+            physicalEvidence: "",
+            shelfNumber: "",
+            boxNumber: "",
+        },
+        labNotes: "",
     };
 }
 
@@ -82,6 +94,20 @@ export default function LabSpecimenForm({ mode }) {
                             ? (normalized.ecology.images.length ? normalized.ecology.images : [""])
                             : [""],
                     },
+
+                    // load from Firestore field "labInfo"
+                    labInfo: {
+                        location: normalized?.labInfo?.location ?? "",
+                        herbariumEntryNumber: normalized?.labInfo?.herbariumEntryNumber ?? "",
+                        collector: normalized?.labInfo?.collector ?? "",
+                        collectionNumber: normalized?.labInfo?.collectionNumber ?? "",
+                        physicalEvidence: normalized?.labInfo?.physicalEvidence ?? "",
+                        shelfNumber: normalized?.labInfo?.shelfNumber ?? "",
+                        boxNumber: normalized?.labInfo?.boxNumber ?? "",
+                    },
+
+                    // load "labNotes"
+                    labNotes: normalized?.labNotes ?? "",
                 });
 
                 setStatus("ready");
@@ -105,6 +131,20 @@ export default function LabSpecimenForm({ mode }) {
         });
     };
 
+    const cleanObjectStrings = (obj) => {
+        // Remove keys whose values are empty strings (keeps numbers/booleans)
+        const out = {};
+        for (const [k, v] of Object.entries(obj || {})) {
+            if (typeof v === "string") {
+                const trimmed = v.trim();
+                if (trimmed.length > 0) out[k] = trimmed;
+            } else if (v !== undefined) {
+                out[k] = v;
+            }
+        }
+        return out;
+    };
+
     const onSubmit = async (e) => {
         e.preventDefault();
         setError("");
@@ -125,12 +165,13 @@ export default function LabSpecimenForm({ mode }) {
                     ...form.ecology,
                     images: (form.ecology.images || []).filter((x) => String(x || "").trim().length > 0),
                 },
+
+                // correct field names for backend
+                labInfo: cleanObjectStrings(form.labInfo),
+                labNotes: (form.labNotes ?? "").trim(),
             };
 
-            const url = isEdit
-                ? `/api/fungi/${encodeURIComponent(id)}`
-                : `/api/fungi`;
-
+            const url = isEdit ? `/api/fungi/${encodeURIComponent(id)}` : `/api/fungi`;
             const method = isEdit ? "PUT" : "POST";
 
             const res = await fetch(url, {
@@ -162,7 +203,7 @@ export default function LabSpecimenForm({ mode }) {
                     <div>
                         <h1 className="text-xl font-semibold">{title}</h1>
                         <p className="mt-1 text-sm text-zinc-600">
-                            {isEdit ? "Update taxonomy and ecology fields." : "Create a new specimen record."}
+                            {isEdit ? "Update taxonomy, ecology, and lab fields." : "Create a new specimen record."}
                         </p>
                     </div>
 
@@ -171,9 +212,7 @@ export default function LabSpecimenForm({ mode }) {
                     </button>
                 </div>
 
-                {status === "loading" && (
-                    <div className="mt-6 text-sm text-zinc-600">Loading...</div>
-                )}
+                {status === "loading" && <div className="mt-6 text-sm text-zinc-600">Loading...</div>}
 
                 {status === "error" && (
                     <div className="mt-6">
@@ -281,6 +320,65 @@ export default function LabSpecimenForm({ mode }) {
                                         });
                                     }}
                                     placeholder="images/py-001.jpg or https://..."
+                                />
+                            </div>
+                        </div>
+
+                        {/* Admin / Lab observations */}
+                        <div className="rounded-2xl border border-zinc-200 bg-white p-5">
+                            <div className="text-sm font-semibold text-zinc-900">Lab observations (Admin)</div>
+                            <p className="mt-1 text-xs text-zinc-600">
+                                Internal fields for herbarium/lab management. Not intended for public browsing.
+                            </p>
+
+                            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                                <Field
+                                    label="Location"
+                                    value={form.labInfo.location}
+                                    onChange={(v) => setField("labInfo.location", v)}
+                                    placeholder="Mycology Laboratory, Faculty of Sciences"
+                                />
+                                <Field
+                                    label="Entry number"
+                                    value={form.labInfo.herbariumEntryNumber}
+                                    onChange={(v) => setField("labInfo.herbariumEntryNumber", v)}
+                                    placeholder="HEP-2024-112"
+                                />
+                                <Field
+                                    label="Collector"
+                                    value={form.labInfo.collector}
+                                    onChange={(v) => setField("labInfo.collector", v)}
+                                    placeholder="Jonathan"
+                                />
+                                <Field
+                                    label="Collection number (lab)"
+                                    value={form.labInfo.collectionNumber}
+                                    onChange={(v) => setField("labInfo.collectionNumber", v)}
+                                    placeholder="PY-FUN-001"
+                                />
+                                <Field
+                                    label="Physical evidence"
+                                    value={form.labInfo.physicalEvidence}
+                                    onChange={(v) => setField("labInfo.physicalEvidence", v)}
+                                    placeholder="Dried and pressed basidiocarp"
+                                />
+                                <Field
+                                    label="Shelf number"
+                                    value={form.labInfo.shelfNumber}
+                                    onChange={(v) => setField("labInfo.shelfNumber", v)}
+                                    placeholder="3"
+                                />
+                                <Field
+                                    label="Box number"
+                                    value={form.labInfo.boxNumber}
+                                    onChange={(v) => setField("labInfo.boxNumber", v)}
+                                    placeholder="12"
+                                />
+                                <Field
+                                    label="Lab notes"
+                                    value={form.labNotes}
+                                    onChange={(v) => setField("labNotes", v)}
+                                    placeholder="Collected on dead hardwood substrate."
                                 />
                             </div>
                         </div>
