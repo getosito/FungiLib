@@ -1,5 +1,18 @@
 export const translations = {
   en: {
+
+    nav: {
+      definitions: "DEFINITIONS",
+      about: "ABOUT",
+      communities: "COMMUNITIES",
+      forage: "FORAGE",
+      learn: "LEARN",
+      login: "Login",
+      signup: "Sign up",
+      signout: "Sign out",
+      myLab: "My Laboratory",
+    },
+    
     login: {
       title: "Welcome back",
       subtitle: "Log in to manage specimens and access lab tools.",
@@ -38,6 +51,18 @@ export const translations = {
   },
 
   es: {
+nav: {
+      definitions: "DEFINICIONES",
+      about: "ACERCA DE",
+      communities: "COMUNIDADES",
+      forage: "RECOLECCION",
+      learn: "APRENDER",
+      login: "Ingresar",
+      signup: "Registrarse",
+      signout: "Cerrar sesion",
+      myLab: "Mi Laboratorio",
+    },
+
     login: {
       title: "Bienvenid@ de vuelta",
       subtitle: "Inicia sesion para gestionar especimenes y acceder a herramientas del laboratorio.",

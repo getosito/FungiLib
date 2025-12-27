@@ -9,13 +9,20 @@ const { requireAuth, authorizeRoles } = require("../middleware/auth");
 router.get("/", controller.listFungi);
 router.get("/:id", controller.getFungus);
 
-
 router.post(
   "/",
   requireAuth,
   authorizeRoles("admin", "researcher"),
   upload.array("images", 5),
   controller.createFungus
+);
+
+router.put(
+  "/:id",
+  requireAuth,
+  authorizeRoles("admin", "researcher"),
+  upload.array("images", 5),
+  controller.updateFungus
 );
 
 router.delete(

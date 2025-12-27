@@ -4,7 +4,7 @@ import Hero from "../components/Hero";
 import AdvancedSearchPanel from "../components/AdvancedSearchPanel";
 import SpecimenGrid from "../components/SpecimenGrid";
 
-export default function Home() {
+export default function LabCatalog() {
     const [items, setItems] = useState([]);
     const [query, setQuery] = useState("");
     const [status, setStatus] = useState("loading");
@@ -29,9 +29,7 @@ export default function Home() {
                 const res = await fetch("/api/fungi");
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                const list = Array.isArray(data)
-                    ? data
-                    : data.fungi ?? data.data ?? [];
+                const list = Array.isArray(data) ? data : data.fungi ?? data.data ?? [];
                 setItems(list);
                 setStatus("done");
             } catch (e) {
@@ -56,9 +54,7 @@ export default function Home() {
         return items.filter((x) => {
             const common = (x?.taxonomy?.commonName ?? "").toLowerCase();
             const sci = (x?.taxonomy?.scientificName ?? "").toLowerCase();
-
-            const matchesQuery =
-                !q || common.includes(q) || sci.includes(q);
+            const matchesQuery = !q || common.includes(q) || sci.includes(q);
 
             const cls = (x?.taxonomy?.class ?? "").toLowerCase();
             const division = (x?.taxonomy?.division ?? "").toLowerCase();
@@ -74,8 +70,7 @@ export default function Home() {
             const matchesFamily = !fFamily || family.includes(fFamily);
             const matchesGenus = !fGenus || genus.includes(fGenus);
             const matchesSpecies = !fSpecies || species.includes(fSpecies);
-            const matchesEcoregion =
-                !fEcoregion || ecoregion.includes(fEcoregion);
+            const matchesEcoregion = !fEcoregion || ecoregion.includes(fEcoregion);
 
             return (
                 matchesQuery &&
@@ -91,12 +86,8 @@ export default function Home() {
     }, [items, query, filters]);
 
     const onAdvancedToggle = () => setAdvancedOpen((v) => !v);
-
-    const onApplyAdvanced = () => {
-        setAdvancedOpen(false);
-    };
-
-    const onResetAdvanced = () => {
+    const onApplyAdvanced = () => setAdvancedOpen(false);
+    const onResetAdvanced = () =>
         setFilters({
             class: "",
             division: "",
@@ -106,17 +97,14 @@ export default function Home() {
             species: "",
             ecoregion: "",
         });
-    };
+
+    const canManage = localStorage.getItem("userRole") === "admin";
 
     return (
         <div className="min-h-screen bg-white text-zinc-900">
             <Navbar />
 
-            <Hero
-                query={query}
-                setQuery={setQuery}
-                onAdvancedToggle={onAdvancedToggle}
-            />
+            <Hero query={query} setQuery={setQuery} onAdvancedToggle={onAdvancedToggle} />
 
             <AdvancedSearchPanel
                 open={advancedOpen}
@@ -127,24 +115,18 @@ export default function Home() {
             />
 
             {status === "loading" && (
-                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">
-                    Loading...
-                </div>
+                <div className="mx-auto max-w-6xl px-4 py-10 text-zinc-600">Loading...</div>
             )}
 
             {status === "error" && (
                 <div className="mx-auto max-w-6xl px-4 py-10">
                     <div className="font-bold">Error loading fungi</div>
-                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">
-                        {error}
-                    </pre>
+                    <pre className="mt-2 whitespace-pre-wrap text-sm text-zinc-700">{error}</pre>
                 </div>
             )}
 
             {status === "done" && (
-                <>
-                    <SpecimenGrid items={filtered} perPage={12} />
-                </>
+                <SpecimenGrid items={filtered} title="Catalog" canManage={canManage} perPage={12} />
             )}
         </div>
     );

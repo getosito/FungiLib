@@ -1,85 +1,123 @@
-﻿import { useMemo, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+﻿import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useI18n } from "../i18n/I18nProvider.jsx";
+import { useLabUI } from "../layouts/LabLayout";
 
-const LANGS = ["en", "es"];
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../config/firebase";
+
+function MenuIcon() {
+    return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path
+                d="M4 6h16M4 12h16M4 18h16"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+            />
+        </svg>
+    );
+}
 
 export default function Navbar() {
-    const [lang, setLang] = useState("en");
+    const { lang, toggleLang, t } = useI18n();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const isLabRoute = location.pathname.startsWith("/lab");
+    const labUI = isLabRoute ? useLabUI() : null;
+
+    const [user, setUser] = useState(null);
+    const [authReady, setAuthReady] = useState(false);
 
     useEffect(() => {
-        const saved = localStorage.getItem("lang");
-        if (saved && LANGS.includes(saved)) setLang(saved);
+        const unsub = onAuthStateChanged(auth, (u) => {
+            setUser(u);
+            setAuthReady(true);
+        });
+        return () => unsub();
     }, []);
 
-    const t = useMemo(() => {
-        const dict = {
-            en: {
-                definitions: "Definitions",
-                about: "About",
-                communities: "Communities",
-                forage: "Forage",
-                learn: "Learn",
-                login: "Login",
-                signup: "Sign up"
-            },
-            es: {
-                definitions: "Definiciones",
-                about: "Acerca de",
-                communities: "Comunidades",
-                forage: "Recoleccion",
-                learn: "Aprender",
-                login: "Ingresar",
-                signup: "Registrarse"
-            },
-        };
-        return dict[lang];
-    }, [lang]);
+    const onSignOut = async () => {
+        await signOut(auth);
+        navigate("/");
+    };
 
-    const toggleLang = () => {
-        const next = lang === "en" ? "es" : "en";
-        setLang(next);
-        localStorage.setItem("lang", next);
+    const nav = t?.nav || {};
+    const labels = {
+        definitions: nav.definitions || "DEFINITIONS",
+        about: nav.about || "ABOUT",
+        communities: nav.communities || "COMMUNITIES",
+        forage: nav.forage || "FORAGE",
+        learn: nav.learn || "LEARN",
+        login: nav.login || "Login",
+        signup: nav.signup || "Sign up",
+        signout: nav.signout || "Sign out",
+        myLab: nav.myLab || "My Laboratory",
     };
 
     return (
         <header className="nav">
             <div className="nav__left">
-                <div className="nav__brand">
-                    <img src="/logo.png" alt="FungiLib" className="nav__logo" />
-                    <span className="nav__title">FungiLib</span>
-                </div>
+                {isLabRoute && labUI && (
+                    <button
+                        type="button"
+                        onClick={labUI.toggleDrawer}
+                        className="nav__iconBtn"
+                        aria-label="Open lab menu"
+                    >
+                        <MenuIcon />
+                    </button>
+                )}
+
+                <Link to="/" className="nav__brand">
+                    <strong>FungiLib</strong>
+                </Link>
 
                 <nav className="nav__links">
-                    <a href="#definitions">{t.definitions}</a>
-                    <a href="#about">{t.about}</a>
-                    <a href="#communities">{t.communities}</a>
-                    <a href="#forage">{t.forage}</a>
-                    <a href="#learn">{t.learn}</a>
+                    <Link to="/definitions">{labels.definitions}</Link>
+                    <Link to="/about">{labels.about}</Link>
+                    <Link to="/communities">{labels.communities}</Link>
+                    <Link to="/forage">{labels.forage}</Link>
+                    <Link to="/learn">{labels.learn}</Link>
                 </nav>
             </div>
 
             <div className="nav__right">
                 <button
-                    className="nav__iconBtn"
+                    type="button"
                     onClick={toggleLang}
-                    title="Language"
+                    className="nav__iconBtn"
+                    aria-label="Toggle language"
                 >
-                    {lang.toUpperCase()}
+                    {lang === "en" ? "ES" : "EN"}
                 </button>
 
-                <Link
-                    to="/login"
-                    className="nav__btn nav__btn--ghost"
-                >
-                    {t.login}
-                </Link>
-
-                <Link
-                    to="/signup"
-                    className="nav__btn nav__btn--solid"
-                >
-                    {t.signup}
-                </Link>
+                {!authReady ? null : !user ? (
+                    <>
+                        <Link to="/login" className="nav__btn">
+                            {labels.login}
+                        </Link>
+                        <Link to="/signup" className="nav__btn nav__btn--primary">
+                            {labels.signup}
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        {!isLabRoute && (
+                            <Link to="/lab/catalog" className="nav__btn">
+                                {labels.myLab}
+                            </Link>
+                        )}
+                        <button
+                            type="button"
+                            className="nav__btn nav__btn--primary"
+                            onClick={onSignOut}
+                        >
+                            {labels.signout}
+                        </button>
+                    </>
+                )}
             </div>
         </header>
     );

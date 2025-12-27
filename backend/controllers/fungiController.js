@@ -214,8 +214,15 @@ async function updateFungus(req, res) {
 async function deleteFungus(req, res) {
   try {
     const id = req.params.id;
-    await fungiCollection.doc(id).delete();
-    res.json({ success: true });
+    const ref = fungiCollection.doc(id);
+
+    const snap = await ref.get();
+    if (!snap.exists) {
+      return res.status(404).json({ error: "Not found" });
+    }
+
+    await ref.delete();
+    res.json({ success: true, id });
   } catch (err) {
     console.error("deleteFungus error:", err);
     res.status(500).json({ error: "Failed to delete fungus" });
